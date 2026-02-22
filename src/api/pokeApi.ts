@@ -19,10 +19,3 @@ export async function fetchPokemonSpecies(id: number): Promise<PokemonSpecies> {
   if (!res.ok) throw new Error(`Failed to fetch species: ${id}`)
   return res.json()
 }
-
-export async function fetchAllPokemonNames(): Promise<{ name: string; url: string }[]> {
-  const res = await fetch(`${BASE_URL}/pokemon?limit=1500`)
-  if (!res.ok) throw new Error('Failed to fetch Pokemon names')
-  const data: PokemonListResponse = await res.json()
-  return data.results
-}

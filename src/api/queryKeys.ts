@@ -5,5 +5,4 @@ export const pokemonKeys = {
   details: () => [...pokemonKeys.all, 'detail'] as const,
   detail: (id: number | string) => [...pokemonKeys.details(), id] as const,
   species: (id: number) => [...pokemonKeys.all, 'species', id] as const,
-  allNames: () => [...pokemonKeys.all, 'all-names'] as const,
 }
