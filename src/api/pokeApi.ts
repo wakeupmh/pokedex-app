@@ -14,7 +14,7 @@ export async function fetchPokemon(idOrName: number | string): Promise<Pokemon> 
   return res.json()
 }
 
-export async function fetchPokemonSpecies(id: number): Promise<PokemonSpecies> {
+export async function fetchPokemonSpecies(id: number | string): Promise<PokemonSpecies> {
   const res = await fetch(`${BASE_URL}/pokemon-species/${id}`)
   if (!res.ok) throw new Error(`Failed to fetch species: ${id}`)
   return res.json()
