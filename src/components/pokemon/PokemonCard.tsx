@@ -1,6 +1,7 @@
 import { Card, CardActionArea, CardContent, Typography, Box, Skeleton, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { usePokemon } from '../../api/hooks/usePokemon'
+import { useCaughtPokemon } from '../../context/CaughtPokemonContext'
 import { getTypeColor } from '../../utils/typeColors'
 import { capitalize, formatPokemonId } from '../../utils/formatters'
 import TypeChip from './TypeChip'
@@ -21,6 +22,8 @@ export default function PokemonCard({ id, name }: PokemonCardProps) {
   // React Query also deduplicates concurrent requests, so parallel card mounts
   // produce at most one in-flight fetch per unique Pokemon id.
   const { data: pokemon, isLoading } = usePokemon(id)
+  const { isCaught } = useCaughtPokemon()
+  const caught = isCaught(id)
 
   const primaryType = pokemon?.types[0]?.type.name ?? 'normal'
   const bgColor = getTypeColor(primaryType)
@@ -61,6 +64,30 @@ export default function PokemonCard({ id, name }: PokemonCardProps) {
             position: 'relative',
           }}
         >
+          {caught && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 8,
+                left: 10,
+                width: 22,
+                height: 22,
+                borderRadius: '50%',
+                bgcolor: 'rgba(255,255,255,0.9)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Pokeball icon */}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#e53935" strokeWidth="2.5" fill="white" />
+                <path d="M2 12h20" stroke="#e53935" strokeWidth="2.5" />
+                <circle cx="12" cy="12" r="3" fill="#e53935" />
+                <circle cx="12" cy="12" r="1.5" fill="white" />
+              </svg>
+            </Box>
+          )}
           <Typography
             variant="caption"
             sx={{

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import type { Pokemon, PokemonSpecies } from '../../types/pokemon'
 import { formatHeight, formatWeight, formatAbilityName, formatGenderRatio } from '../../utils/formatters'
 import InfoRow from '../common/InfoRow'
@@ -37,9 +37,7 @@ export default function AboutTab({ pokemon, species }: AboutTabProps) {
       <InfoRow label="Weight" value={formatWeight(pokemon.weight)} />
       <InfoRow label="Abilities" value={abilities} />
 
-      <Typography variant="subtitle2" sx={{ mt: 3, mb: 1.5, fontWeight: 700 }}>
-        Breeding
-      </Typography>
+      <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
       <InfoRow label="Gender" value={genderText} />
       <InfoRow label="Egg Groups" value={eggGroups} />
       <InfoRow label="Egg Cycles" value={eggCycles} />
