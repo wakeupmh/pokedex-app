@@ -28,7 +28,7 @@ export default function AppLayout() {
             to="/"
             sx={{ flexGrow: 1, color: 'inherit', textDecoration: 'none', fontWeight: 700 }}
           >
-            Pokedex
+            Pokédex
           </Typography>
           <Button
             component={Link}
