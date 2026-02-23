@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { CaughtPokemon } from '../types/pokemon'
-import { getCaughtPokemon, setCaughtPokemon } from '../utils/localStorage'
+import { getCaughtPokemon, setCaughtPokemon as persistCaughtPokemon } from '../utils/localStorage'
 
 interface CaughtPokemonContextValue {
   caughtPokemon: CaughtPokemon[]
@@ -12,34 +12,24 @@ interface CaughtPokemonContextValue {
 const CaughtPokemonContext = createContext<CaughtPokemonContextValue | null>(null)
 
 export function CaughtPokemonProvider({ children }: { children: ReactNode }) {
-  const [caughtPokemon, setCaughtState] = useState<CaughtPokemon[]>(getCaughtPokemon)
+  const [caughtPokemon, setCaughtPokemon] = useState<CaughtPokemon[]>(getCaughtPokemon)
 
-  const updateCaught = useCallback((next: CaughtPokemon[]) => {
-    setCaughtPokemon(next)
-    setCaughtState(next)
-  }, [])
+  useEffect(() => {
+    persistCaughtPokemon(caughtPokemon)
+  }, [caughtPokemon])
 
   const catchPokemon = useCallback((pokemon: CaughtPokemon) => {
-    setCaughtState((prev) => {
+    setCaughtPokemon((prev) => {
       if (prev.some((p) => p.id === pokemon.id)) return prev
-      const next = [...prev, pokemon]
-      updateCaught(next)
-      return next
+      return [...prev, pokemon]
     })
-  }, [updateCaught])
+  }, [])
 
   const releasePokemon = useCallback((id: number) => {
-    setCaughtState((prev) => {
-      const next = prev.filter((p) => p.id !== id)
-      updateCaught(next)
-      return next
-    })
-  }, [updateCaught])
+    setCaughtPokemon((prev) => prev.filter((p) => p.id !== id))
+  }, [])
 
-  const isCaught = useCallback(
-    (id: number) => caughtPokemon.some((p) => p.id === id),
-    [caughtPokemon],
-  )
+  const isCaught = useCallback((id: number) => caughtPokemon.some((p) => p.id === id), [caughtPokemon])
 
   return (
     <CaughtPokemonContext.Provider value={{ caughtPokemon, catchPokemon, releasePokemon, isCaught }}>
