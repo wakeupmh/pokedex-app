@@ -60,7 +60,7 @@ export default function PokemonDetailPage() {
             <IconButton onClick={() => navigate(-1)} sx={{ color: '#fff' }}>
               <ArrowBackIcon />
             </IconButton>
-            <CatchButton isCaught={caught} onToggle={handleToggleCatch} size="large" />
+            <CatchButton isCaught={caught} onToggle={handleToggleCatch} />
           </Box>
 
           {/* Name + ID */}

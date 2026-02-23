@@ -1,13 +1,24 @@
-import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material'
+import { AppBar, Toolbar, Typography, Button, Box, Container, Badge } from '@mui/material'
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useCaughtPokemon } from '../../context/CaughtPokemonContext'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 
 export default function AppLayout() {
   const location = useLocation()
+  const { caughtPokemon } = useCaughtPokemon()
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <ScrollToTop />
       <AppBar position="sticky">
         <Toolbar>
           <CatchingPokemonIcon sx={{ mr: 1 }} />
@@ -31,7 +42,11 @@ export default function AppLayout() {
             component={Link}
             to="/collection"
             color="inherit"
-            startIcon={<FavoriteIcon />}
+            startIcon={
+              <Badge badgeContent={caughtPokemon.length} color="error" max={999}>
+                <CatchingPokemonIcon />
+              </Badge>
+            }
             sx={{ fontWeight: location.pathname === '/collection' ? 700 : 400 }}
           >
             Collection
