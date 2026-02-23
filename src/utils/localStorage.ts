@@ -6,7 +6,8 @@ export function getCaughtPokemon(): CaughtPokemon[] {
   try {
     const raw = localStorage.getItem(CAUGHT_KEY)
     return raw ? JSON.parse(raw) : []
-  } catch {
+  } catch (error) {
+    console.error('Failed to load caught Pokémon from localStorage:', error)
     return []
   }
 }

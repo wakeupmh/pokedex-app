@@ -44,3 +44,12 @@ export function extractIdFromUrl(url: string): number {
   const match = url.match(/\/(\d+)\/?$/)
   return match ? parseInt(match[1], 10) : 0
 }
+
+/** Format gender ratio from PokeAPI genderRate (0–8 scale, -1 = genderless) */
+export function formatGenderRatio(genderRate: number | undefined): string {
+  if (genderRate === undefined) return '—'
+  if (genderRate === -1) return 'Genderless'
+  const female = (genderRate / 8) * 100
+  const male = 100 - female
+  return `${male}% Male, ${female}% Female`
+}

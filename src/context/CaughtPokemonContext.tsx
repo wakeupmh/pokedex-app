@@ -14,22 +14,27 @@ const CaughtPokemonContext = createContext<CaughtPokemonContextValue | null>(nul
 export function CaughtPokemonProvider({ children }: { children: ReactNode }) {
   const [caughtPokemon, setCaughtState] = useState<CaughtPokemon[]>(getCaughtPokemon)
 
+  const updateCaught = useCallback((next: CaughtPokemon[]) => {
+    setCaughtPokemon(next)
+    setCaughtState(next)
+  }, [])
+
   const catchPokemon = useCallback((pokemon: CaughtPokemon) => {
     setCaughtState((prev) => {
       if (prev.some((p) => p.id === pokemon.id)) return prev
       const next = [...prev, pokemon]
-      setCaughtPokemon(next)
+      updateCaught(next)
       return next
     })
-  }, [])
+  }, [updateCaught])
 
   const releasePokemon = useCallback((id: number) => {
     setCaughtState((prev) => {
       const next = prev.filter((p) => p.id !== id)
-      setCaughtPokemon(next)
+      updateCaught(next)
       return next
     })
-  }, [])
+  }, [updateCaught])
 
   const isCaught = useCallback(
     (id: number) => caughtPokemon.some((p) => p.id === id),

@@ -11,6 +11,15 @@ interface PokemonCardProps {
 }
 
 export default function PokemonCard({ id, name }: PokemonCardProps) {
+  // The PokeAPI list endpoint returns only { name, url } — no sprite or types.
+  // PokemonGrid therefore has no preloaded detail data to pass down, so each
+  // card must fetch its own detail. This is not a fixable N+1: it is an
+  // inherent property of the API shape.
+  //
+  // Mitigation: usePokemon (via createDetailQuery) sets staleTime=10min so
+  // React Query serves cached responses on revisit without a network round-trip.
+  // React Query also deduplicates concurrent requests, so parallel card mounts
+  // produce at most one in-flight fetch per unique Pokemon id.
   const { data: pokemon, isLoading } = usePokemon(id)
 
   const primaryType = pokemon?.types[0]?.type.name ?? 'normal'

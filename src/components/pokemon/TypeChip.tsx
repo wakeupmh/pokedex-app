@@ -1,4 +1,5 @@
 import { Chip } from '@mui/material'
+import { capitalize } from '../../utils/formatters'
 import { getTypeColor } from '../../utils/typeColors'
 
 interface TypeChipProps {
@@ -8,7 +9,7 @@ interface TypeChipProps {
 export default function TypeChip({ type }: TypeChipProps) {
   return (
     <Chip
-      label={type.charAt(0).toUpperCase() + type.slice(1)}
+      label={capitalize(type)}
       size="small"
       sx={{
         backgroundColor: getTypeColor(type),

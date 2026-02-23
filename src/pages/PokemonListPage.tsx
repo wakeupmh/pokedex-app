@@ -1,9 +1,8 @@
 import { useState, useMemo } from 'react'
 import { Box } from '@mui/material'
 import { usePokemonList } from '../api/hooks/usePokemonList'
-import { usePokemonSearch } from '../api/hooks/usePokemonSearch'
-import { useDebounce } from '../hooks/useDebounce'
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll'
+import { usePokemonSearchLogic } from '../hooks/usePokemonSearchLogic'
 import { extractIdFromUrl } from '../utils/formatters'
 import PokemonGrid from '../components/pokemon/PokemonGrid'
 import SearchBar from '../components/search/SearchBar'
@@ -13,9 +12,6 @@ import EmptyState from '../components/common/EmptyState'
 
 export default function PokemonListPage() {
   const [search, setSearch] = useState('')
-  const debouncedSearch = useDebounce(search)
-
-  const isSearching = debouncedSearch.length > 0
 
   // Infinite scroll mode
   const {
@@ -38,27 +34,13 @@ export default function PokemonListPage() {
     )
   }, [listData])
 
-  // Search: first filter cached Pokemon (partial match)
-  const cachedResults = useMemo(() => {
-    if (!isSearching) return []
-    const query = debouncedSearch.toLowerCase()
-    return listPokemon.filter((p) => p.name.includes(query))
-  }, [debouncedSearch, listPokemon, isSearching])
-
-  // Search: if no cached results, try API with exact name
-  const shouldSearchApi = isSearching && cachedResults.length === 0
   const {
-    data: apiResult,
+    results: searchResults,
+    isSearching,
     isLoading: apiSearching,
     isError: apiError,
-  } = usePokemonSearch(debouncedSearch, shouldSearchApi)
-
-  // Combine results
-  const searchResults = useMemo(() => {
-    if (cachedResults.length > 0) return cachedResults
-    if (apiResult) return [{ id: apiResult.id, name: apiResult.name }]
-    return []
-  }, [cachedResults, apiResult])
+    debouncedSearch,
+  } = usePokemonSearchLogic(search, listPokemon)
 
   const pokemon = isSearching ? searchResults : listPokemon
 

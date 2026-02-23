@@ -1,21 +1,11 @@
 import { Box, Typography } from '@mui/material'
 import type { Pokemon, PokemonSpecies } from '../../types/pokemon'
-import { formatHeight, formatWeight, formatAbilityName } from '../../utils/formatters'
+import { formatHeight, formatWeight, formatAbilityName, formatGenderRatio } from '../../utils/formatters'
+import InfoRow from '../common/InfoRow'
 
 interface AboutTabProps {
   pokemon: Pokemon
   species: PokemonSpecies | undefined
-}
-
-function InfoRow({ label, value }: { label: string; value: string }) {
-  return (
-    <Box sx={{ display: 'flex', mb: 1.5 }}>
-      <Typography variant="body2" color="text.secondary" sx={{ minWidth: 120, fontWeight: 500 }}>
-        {label}
-      </Typography>
-      <Typography variant="body2">{value}</Typography>
-    </Box>
-  )
 }
 
 export default function AboutTab({ pokemon, species }: AboutTabProps) {
@@ -30,15 +20,7 @@ export default function AboutTab({ pokemon, species }: AboutTabProps) {
     .map((a) => formatAbilityName(a.ability.name) + (a.is_hidden ? ' (Hidden)' : ''))
     .join(', ')
 
-  const genderRate = species?.gender_rate
-  let genderText = '—'
-  if (genderRate !== undefined && genderRate !== -1) {
-    const female = (genderRate / 8) * 100
-    const male = 100 - female
-    genderText = `${male}% Male, ${female}% Female`
-  } else if (genderRate === -1) {
-    genderText = 'Genderless'
-  }
+  const genderText = formatGenderRatio(species?.gender_rate)
 
   const eggGroups = species?.egg_groups.map((g) => g.name).join(', ') ?? '—'
   const eggCycles = species?.hatch_counter?.toString() ?? '—'
